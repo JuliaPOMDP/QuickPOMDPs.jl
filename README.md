@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/zsunberg/QuickPOMDPs.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/zsunberg/QuickPOMDPs.jl?branch=master)
 [![codecov.io](http://codecov.io/github/zsunberg/QuickPOMDPs.jl/coverage.svg?branch=master)](http://codecov.io/github/zsunberg/QuickPOMDPs.jl?branch=master)
 
-Eventually this will be a repository containing one or more simplified interfaces for expressing certain classes of POMDPs. The goal is for [POMDPs.jl]( https://github.com/JuliaPOMDP/POMDPs.jl) to act as a low level interface (like [MathProgBase](https://github.com/JuliaOpt/MathProgBase.jl)) and for the interface(s) defined here to act as convenient high-level interface (like [JuMP](https://github.com/JuliaOpt/JuMP.jl) or [Convex](https://github.com/JuliaOpt/Convex.jl).
+Eventually this will be a repository containing one or more simplified interfaces for expressing certain classes of POMDPs. The goal is for [POMDPs.jl]( https://github.com/JuliaPOMDP/POMDPs.jl) to act as a low level interface (like [MathProgBase](https://github.com/JuliaOpt/MathProgBase.jl)) and for the interface(s) defined here to act as concise and convenient high-level interface (like [JuMP](https://github.com/JuliaOpt/JuMP.jl) or [Convex](https://github.com/JuliaOpt/Convex.jl).
 
 Contributions of new interfaces for defining specific classes of problems are welcome!
 
@@ -52,7 +52,7 @@ pomdp = @discretePOMDP begin
         end
     end
 
-    @initial [TIGER_L, TIGER_R]=>[0.5, 0.5]
+    @initial [:tiger_l, :tiger_r]=>[0.5, 0.5]
     @discount 0.95
 end
 ```
@@ -115,7 +115,7 @@ mdp = @MDP begin
                  )
     default_reward = 0.0
 
-    @transition #XXX what is the most concise way to define the 
+    @transition #XXX what is the most concise way to define the transition distribution??
 
     terminal = vals(reward)
     discount = 0.95
