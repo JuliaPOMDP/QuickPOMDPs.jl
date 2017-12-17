@@ -4,7 +4,9 @@
 [![Coverage Status](https://coveralls.io/repos/zsunberg/QuickPOMDPs.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/zsunberg/QuickPOMDPs.jl?branch=master)
 [![codecov.io](http://codecov.io/github/zsunberg/QuickPOMDPs.jl/coverage.svg?branch=master)](http://codecov.io/github/zsunberg/QuickPOMDPs.jl?branch=master)
 
-Eventually this will be a repository containing one or more simplified interfaces for expressing certain classes of POMDPs. The goal is for [POMDPs.jl]( https://github.com/JuliaPOMDP/POMDPs.jl) to act as a low level interface (like [MathProgBase](https://github.com/JuliaOpt/MathProgBase.jl)) and for the interface(s) defined here to act as concise and convenient high-level interface (like [JuMP](https://github.com/JuliaOpt/JuMP.jl) or [Convex](https://github.com/JuliaOpt/Convex.jl).
+Eventually this will be a repository containing one or more simplified interfaces for expressing certain classes of POMDPs. The goal is for [POMDPs.jl]( https://github.com/JuliaPOMDP/POMDPs.jl) to act as a low level interface (like [MathProgBase](https://github.com/JuliaOpt/MathProgBase.jl)) and for the interface(s) defined here to act as concise and convenient high-level interface (like [JuMP](https://github.com/JuliaOpt/JuMP.jl) or [Convex](https://github.com/JuliaOpt/Convex.jl)).
+
+Another package that should be referenced when designing this is [PLite.jl](https://github.com/sisl/PLite.jl/blob/master/docs/README.md).
 
 Contributions of new interfaces for defining specific classes of problems are welcome!
 
