@@ -53,7 +53,25 @@ POMDPModelTools.ordered_observations(m::DEP) = m.o
 # TODO reward(m, s, a)
 # TODO support O(s, a, sp, o)
 # TODO initial state distribution
+# TODO convert_s, etc, dimensions
 
+"""
+    DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ)
+
+Create a POMDP defined by the tuple (S,A,O,T,Z,R,γ).
+
+# Arguments
+
+- `S`,`A`,`O`: State, action, and observation spaces (typically `Vector`s)
+- `T::Function`: Transition probability distribution function; ``T(s,a,s')`` is the probability of transitioning to state ``s'`` from state ``s`` after taking action ``a``.
+- `Z::Function`: Observation probability distribution function; ``O(a, s', o)`` is the probability of receiving observation ``o`` when state ``s'`` is reached after action ``a``.
+- `R::Function`: Reward function; ``R(s,a)`` is the reward for taking action ``a`` in state ``s``.
+- `γ::Float64`: Discount factor.
+
+# Notes
+- The default initial state distribution is uniform across all states. Changing this is not yet supported, but it can be overridden for simulations.
+- Terminal states are not yet supported, but absorbing states with zero reward can be used.
+"""
 function DiscreteExplicitPOMDP(s, a, o, t, z, r, discount)
     ss = vec(collect(s))
     as = vec(collect(a))
@@ -96,6 +114,22 @@ function DiscreteExplicitPOMDP(s, a, o, t, z, r, discount)
     return m
 end
 
+"""
+    DiscreteExplicitMDP(S,A,T,R,γ)
+
+Create an MDP defined by the tuple (S,A,T,R,γ).
+
+# Arguments
+
+- `S`,`A`: State and action spaces (typically `Vector`s)
+- `T::Function`: Transition probability distribution function; ``T(s,a,s')`` is the probability of transitioning to state ``s'`` from state ``s`` after taking action ``a``.
+- `R::Function`: Reward function; ``R(s,a)`` is the reward for taking action ``a`` in state ``s``.
+- `γ::Float64`: Discount factor.
+
+# Notes
+- The default initial state distribution is uniform across all states. Changing this is not yet supported, but it can be overridden for simulations.
+- Terminal states are not yet supported, but absorbing states with zero reward can be used.
+"""
 function DiscreteExplicitMDP(s, a, t, r, discount)
     ss = vec(collect(s))
     as = vec(collect(a))
