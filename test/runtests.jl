@@ -1,5 +1,6 @@
 using QuickPOMDPs
-using Base.Test
+using Test
 
-# write your own tests here
-@test 1 == 2
+using POMDPs, POMDPPolicies, POMDPSimulators, BeliefUpdaters
+
+include("discrete_explicit.jl")
