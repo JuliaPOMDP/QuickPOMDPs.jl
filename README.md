@@ -1,127 +1,63 @@
 # QuickPOMDPs
 
-[![Build Status](https://travis-ci.org/zsunberg/QuickPOMDPs.jl.svg?branch=master)](https://travis-ci.org/zsunberg/QuickPOMDPs.jl)
-[![Coverage Status](https://coveralls.io/repos/zsunberg/QuickPOMDPs.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/zsunberg/QuickPOMDPs.jl?branch=master)
-[![codecov.io](http://codecov.io/github/zsunberg/QuickPOMDPs.jl/coverage.svg?branch=master)](http://codecov.io/github/zsunberg/QuickPOMDPs.jl?branch=master)
+[![Build Status](https://travis-ci.org/JuliaPOMDP/QuickPOMDPs.jl.svg?branch=master)](https://travis-ci.org/JuliaPOMDP/QuickPOMDPs.jl)
+[![Coverage Status](https://coveralls.io/repos/JuliaPOMDP/QuickPOMDPs.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/JuliaPOMDP/QuickPOMDPs.jl?branch=master)
+[![codecov.io](http://codecov.io/github/JuliaPOMDP/QuickPOMDPs.jl/coverage.svg?branch=master)](http://codecov.io/github/JuliaPOMDP/QuickPOMDPs.jl?branch=master)
 
-Eventually this will be a repository containing one or more simplified interfaces for expressing certain classes of POMDPs. The goal is for [POMDPs.jl]( https://github.com/JuliaPOMDP/POMDPs.jl) to act as a low level interface (like [MathProgBase](https://github.com/JuliaOpt/MathProgBase.jl)) and for the interface(s) defined here to act as concise and convenient high-level interface (like [JuMP](https://github.com/JuliaOpt/JuMP.jl) or [Convex](https://github.com/JuliaOpt/Convex.jl)).
+Simplified Interface for specifying [POMDPs.jl](https://github.com/JuliaPOMDP/POMDPs.jl) models.
 
-Another package that should be referenced when designing this is [PLite.jl](https://github.com/sisl/PLite.jl/blob/master/docs/README.md).
+For now there is only one interface (Discrete Explicit), but more may be added (see [IDEAS.md](IDEAS.md)).
 
-Contributions of new interfaces for defining specific classes of problems are welcome!
+## Discrete Explicit Interface
 
-For now, there are just a few sketches of interfaces outlined below:
+This interface is designed to match the standard definition of a POMDP in the literature as closely as possible. The standard definition uses the tuple (S,A,O,T,Z,R,γ) for a POMDP and (S,A,T,R,γ) for an MDP, where
 
-# Interface Ideas
+- S, A, and O are the state, action, and observation spaces,
+- T and Z are the transition and observation probability distribution functions (pdfs),
+- R is the reward function, and
+- γ is the discount factor.
 
-## Basic Discrete
+The `DiscreteExplicitPOMDP` and `DiscreteExplicitMDP` types are provided for POMDPs and MDPs with discrete spaces and explicitly defined distributions. They should offer moderately good performance on small to medium-sized problems.
 
-Can represent any problem with discrete actions, observations, and states using the POMDPs.jl explicit interface. This would just be a tight wrapper over the POMDPs.jl interface and would look very similar to a pure POMDPs.jl implementation. Advantages over direct POMDPs.jl are that it's slightly more compact and **you don't have to understand object-oriented programming**.
+### Example
 
-The Tiger problem would look like this:
+The classic tiger POMDP [Kaelbling et al. 98](http://www.sciencedirect.com/science/article/pii/S000437029800023X) can be defined as follows:
 
 ```julia
-pomdp = @discretePOMDP begin
-    @states [:tiger_l, :tiger_r]
-    @actions [:open_l, :open_r, :listen]
-    @observations [:tiger_l, :tiger_r]
+    S = [:left, :right]           # S, A, and O may contain any objects
+    A = [:left, :right, :listen]  # including user-defined types
+    O = [:left, :right]
+    γ = 0.95
 
-    @transition function (s, a)
+    function T(s, a, sp)
         if a == :listen
-            return [s]=>[1.0]
-        else 
-            return [TIGER_L, TIGER_R]=>[0.5, 0.5] # reset
+            return s == sp
+        else # a door is opened
+            return 0.5 #reset
         end
     end
 
-    @reward Dict((:tiger_l, :open_l) => -100.,
-                  (:tiger_r, :open_r) => -100.,
-                  (:tiger_l, :open_r) => 10.,
-                  (:tiger_r, :open_l) => 10.
-                 )
-
-    @default_reward -1.0
-
-    @observation function (a, sp)
+    function Z(a, sp, o)
         if a == :listen
-            if sp == :tiger_l
-                return [:tiger_l, :tiger_r]=>[0.85, 0.15]
+            if o == sp
+                return 0.85
             else
-                return [:tiger_r, :tiger_l]=>[0.85, 0.15]
+                return 0.15
             end
         else
-            return [:tiger_l, :tiger_r]=>[0.5, 0.5]
+            return 0.5
         end
     end
 
-    @initial [:tiger_l, :tiger_r]=>[0.5, 0.5]
-    @discount 0.95
-end
-```
-
-Note, this could also be done without any macros as a constructor with keyword arguments. Perhaps that would be easier to understand?
-
-## Generative Function
-
-Another common problem is one where the dynamics are given by a function. The crying baby problem would look something like this:
-
-```julia
-pomdp = @generativePOMDP begin
-    @initial rng -> rand(rng) > 0.5
-
-    @dynamics function (s, a, rng)
-        if s # hungry
-            sp = true
-        else # not hungry
-            sp = rand(rng) < 0.1 ? true : false
+    function R(s, a)
+        if a == :listen  
+            return -1.0
+        elseif s == a # the tiger was found
+            return -100.0
+        else # the tiger was escaped
+            return 10.0
         end
-        if sp # hungry
-            o = rand(rng) < 0.8 ? true : false
-        else # not hungry
-            o = rand(rng) < 0.1 ? true : false
-        end
-        r = (s ? -10.0 : 0.0) + (a ? -5.0 : 0.0)
-        return s, o, r
     end
 
-    @discount 0.95
-end
-```
-
-Again, you could do this without macros, and just use keyword arguments.
-
-## Named Variables
-
-It might also be more clear what is going on if we declared variables with names as shown in the example below.
-
-This would be tougher to compile though, and it's not clear what the easiest way to express distributions or reward would be.
-
-Ideas welcome!
-
-```julia
-mdp = @MDP begin
-    xmax = 10
-    ymax = 10
-
-    @states begin
-        x in 1:10
-        y in 1:10
-    end
-
-    @actions begin
-        dir in [:up, :down, :left, :right]
-    end
-
-    @reward rdict = Dict(
-                    #XXX no idea how to define this in terms of x and y
-                 )
-    default_reward = 0.0
-
-    @transition #XXX what is the most concise way to define the transition distribution??
-
-    terminal = vals(reward)
-    discount = 0.95
-
-    initial
-end
+    m = DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ)
 ```
