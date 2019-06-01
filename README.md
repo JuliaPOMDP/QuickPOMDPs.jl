@@ -6,7 +6,7 @@
 
 Simplified Interface for specifying [POMDPs.jl](https://github.com/JuliaPOMDP/POMDPs.jl) models.
 
-For now there is only one interface (Discrete Explicit), but more may be added (see [IDEAS.md]()).
+For now there is only one interface (Discrete Explicit), but more may be added (see [IDEAS.md](IDEAS.md)).
 
 ## Discrete Explicit Interface
 
