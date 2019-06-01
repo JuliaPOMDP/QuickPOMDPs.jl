@@ -21,7 +21,7 @@ The `DiscreteExplicitPOMDP` and `DiscreteExplicitMDP` types are provided for POM
 
 ### Example
 
-The classic tiger POMDP [Kaelbling et al. 98](http://www.sciencedirect.com/science/article/pii/S000437029800023X) can be defined as follows:
+The classic tiger POMDP \[[Kaelbling et al. 98](http://www.sciencedirect.com/science/article/pii/S000437029800023X)\] can be defined as follows:
 
 ```julia
     S = [:left, :right]           # S, A, and O may contain any objects
