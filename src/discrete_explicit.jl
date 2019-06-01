@@ -54,6 +54,7 @@ POMDPModelTools.ordered_observations(m::DEP) = m.o
 # TODO support O(s, a, sp, o)
 # TODO initial state distribution
 # TODO convert_s, etc, dimensions
+# TODO better errors if T or Z return something unexpected
 
 """
     DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ)
@@ -102,7 +103,7 @@ function DiscreteExplicitPOMDP(s, a, o, t, z, r, discount)
     m = DiscreteExplicitPOMDP(
         ss, as, os,
         tds, ods,
-        o, r,
+        z, r,
         Dict(ss[i]=>i for i in 1:length(ss)),
         Dict(as[i]=>i for i in 1:length(as)),
         Dict(os[i]=>i for i in 1:length(os)),
