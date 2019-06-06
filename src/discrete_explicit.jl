@@ -50,22 +50,6 @@ POMDPs.initialstate_distribution(m::DE) = m.initial
 
 POMDPs.isterminal(m::DE,s) = s in m.terminals
 
-#=
-POMDPs.convert_s(::Type{V}, s::W, m::DE) where {V<:AbstractArray,W<:AbstractArray} = 
-POMDPs.convert_s(::Type{V}, s::W, m::DE) where {V<:AbstractVector} = convert_to_vec(V, s, m.smap)
-POMDPs.convert_s(::Type{V}, s::W, m::DE) where {V<:AbstractVector} = convert_to_vec(V, s, m.smap)
-
-POMDPs.convert_s(::Type{V}, s, m::DE) where {V<:AbstractArray} = convert_to_vec(V, s, m.smap)
-POMDPs.convert_a(::Type{V}, a, m::DE) where {V<:AbstractArray} = convert_to_vec(V, a, m.amap)
-POMDPs.convert_o(::Type{V}, o, m::DEP) where {V<:AbstractArray} = convert_to_vec(V, o, m.omap)
-POMDPs.convert_s(::Type{}
-=#
-
-#=
-convert_to_vec(V, x, map) = convert(V, [map[x]])
-convert_from_vec(T, v, space) = convert(T, space[convert(Integer, first(v))])
-=#
-
 POMDPModelTools.ordered_states(m::DE) = m.s
 POMDPModelTools.ordered_actions(m::DE) = m.a
 POMDPModelTools.ordered_observations(m::DEP) = m.o
