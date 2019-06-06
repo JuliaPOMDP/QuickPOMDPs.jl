@@ -47,12 +47,18 @@
     end
     println("Undiscounted reward was $rsum.")
     @test rsum == -10.0
+
+    dm = DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ,Deterministic(:left))
+    @test initialstate(dm, Random.GLOBAL_RNG) == :left
+    tm = DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ,terminal=Set(S))
+    @test isterminal(tm, initialstate(tm, Random.GLOBAL_RNG))
 end
 
 @testset "Discrete Explicit MDP" begin
     S = 1:5
     A = [-1, 1]
     γ = 0.95
+    p₀ = Deterministic(1)
 
     function T(s, a, sp)
         if sp == clamp(s+a,1,5)
@@ -73,6 +79,9 @@ end
     end
 
     m = DiscreteExplicitMDP(S,A,T,R,γ)
+    m = DiscreteExplicitMDP(S,A,T,R,γ,p₀)
+    m = DiscreteExplicitMDP(S,A,T,R,γ,p₀,terminal=Set(5))
+    @test isterminal(m, 5)
 
     solver = FunctionSolver(x->1)
     policy = solve(solver, m)
