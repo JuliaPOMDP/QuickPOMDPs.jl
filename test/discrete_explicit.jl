@@ -50,7 +50,7 @@
 
     dm = DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ,Deterministic(:left))
     @test initialstate(dm, Random.GLOBAL_RNG) == :left
-    tm = DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ,terminal=Set(S))
+    tm = DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ,terminals=Set(S))
     @test isterminal(tm, initialstate(tm, Random.GLOBAL_RNG))
 end
 
@@ -80,7 +80,7 @@ end
 
     m = DiscreteExplicitMDP(S,A,T,R,γ)
     m = DiscreteExplicitMDP(S,A,T,R,γ,p₀)
-    m = DiscreteExplicitMDP(S,A,T,R,γ,p₀,terminal=Set(5))
+    m = DiscreteExplicitMDP(S,A,T,R,γ,p₀,terminals=Set(5))
     @test isterminal(m, 5)
 
     solver = FunctionSolver(x->1)

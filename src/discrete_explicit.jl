@@ -72,9 +72,9 @@ Create a POMDP defined by the tuple (S,A,O,T,Z,R,γ).
 - `b₀=Uniform(S)`: Initial belief/state distribution (See `POMDPModelTools.Deterministic` and `POMDPModelTools.SparseCat` for other options).
 
 ## Keyword
-- `terminal=Set()`: Set of terminal states. Once a terminal state is reached, no more actions can be taken or reward received.
+- `terminals=Set()`: Set of terminal states. Once a terminal state is reached, no more actions can be taken or reward received.
 """
-function DiscreteExplicitPOMDP(s, a, o, t, z, r, discount, b0=Uniform(s))
+function DiscreteExplicitPOMDP(s, a, o, t, z, r, discount, b0=Uniform(s); terminals=Set())
     ss = vec(collect(s))
     as = vec(collect(a))
     os = vec(collect(o))
@@ -108,7 +108,7 @@ function DiscreteExplicitPOMDP(s, a, o, t, z, r, discount, b0=Uniform(s))
         Dict(ss[i]=>i for i in 1:length(ss)),
         Dict(as[i]=>i for i in 1:length(as)),
         Dict(os[i]=>i for i in 1:length(os)),
-        discount, b0, terminal
+        discount, b0, convert(Set{eltype(ss)}, terminals)
     )
 
     probability_check(m)
@@ -133,9 +133,9 @@ Create an MDP defined by the tuple (S,A,T,R,γ).
 - `p₀=Uniform(S)`: Initial state distribution (See `POMDPModelTools.Deterministic` and `POMDPModelTools.SparseCat` for other options).
 
 ## Keyword
-- `terminal=Set()`: Set of terminal states. Once a terminal state is reached, no more actions can be taken or reward received.
+- `terminals=Set()`: Set of terminal states. Once a terminal state is reached, no more actions can be taken or reward received.
 """
-function DiscreteExplicitMDP(s, a, t, r, discount, p0=Uniform(s); terminal=Set())
+function DiscreteExplicitMDP(s, a, t, r, discount, p0=Uniform(s); terminals=Set())
     ss = vec(collect(s))
     as = vec(collect(a))
 
@@ -145,7 +145,7 @@ function DiscreteExplicitMDP(s, a, t, r, discount, p0=Uniform(s); terminal=Set()
         ss, as, tds, r,
         Dict(ss[i]=>i for i in 1:length(ss)),
         Dict(as[i]=>i for i in 1:length(as)),
-        discount, p0, terminal
+        discount, p0, convert(Set{eltype(ss)}, terminals)
     )
 
     trans_prob_consistency_check(m)
