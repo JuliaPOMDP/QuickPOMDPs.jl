@@ -52,6 +52,16 @@
     @test initialstate(dm, Random.GLOBAL_RNG) == :left
     tm = DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ,terminals=Set(S))
     @test isterminal(tm, initialstate(tm, Random.GLOBAL_RNG))
+
+    for s in states(m)
+        @test convert_s(statetype(m), convert_s(Vector{Float64}, s, m), m) == s
+    end
+    for a in actions(m)
+        @test convert_a(actiontype(m), convert_a(Vector{Float64}, a, m), m) == a
+    end
+    for o in observations(m)
+        @test convert_o(obstype(m), convert_o(Vector{Float64}, o, m), m) == o
+    end
 end
 
 @testset "Discrete Explicit MDP" begin
@@ -92,4 +102,45 @@ end
         rsum += r
     end
     println("Undiscounted reward was $rsum.")
+
+    for s in states(m)
+        @test convert_s(statetype(m), convert_s(Vector{Float64}, s, m), m) == s
+    end
+    for a in actions(m)
+        @test convert_a(actiontype(m), convert_a(Vector{Float64}, a, m), m) == a
+    end
+end
+
+@testset "convert Number POMDP" begin
+    s = [1,47]
+    T(s, a, sp) = s == sp
+    Z(a, sp, o) = o == sp
+    R(s, a) = 1.0
+    m = DiscreteExplicitPOMDP(s,s,s,T,Z,R,0.95)
+    for s in states(m)
+        @test convert_s(statetype(m), convert_s(Vector{Float64}, s, m), m) == s
+    end
+    for a in actions(m)
+        @test convert_a(actiontype(m), convert_a(Vector{Float64}, a, m), m) == a
+    end
+    for o in observations(m)
+        @test convert_o(obstype(m), convert_o(Vector{Float64}, o, m), m) == o
+    end
+end
+
+@testset "convert Vector POMDP" begin
+    s = [[1,2],[3,4]]
+    T(s, a, sp) = s == sp
+    Z(a, sp, o) = o == sp
+    R(s, a) = 1.0
+    m = DiscreteExplicitPOMDP(s,s,s,T,Z,R,0.95)
+    for s in states(m)
+        @test convert_s(statetype(m), convert_s(Vector{Float64}, s, m), m) == s
+    end
+    for a in actions(m)
+        @test convert_a(actiontype(m), convert_a(Vector{Float64}, a, m), m) == a
+    end
+    for o in observations(m)
+        @test convert_o(obstype(m), convert_o(Vector{Float64}, o, m), m) == o
+    end
 end

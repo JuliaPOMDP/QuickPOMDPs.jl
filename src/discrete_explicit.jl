@@ -54,18 +54,6 @@ POMDPModelTools.ordered_states(m::DE) = m.s
 POMDPModelTools.ordered_actions(m::DE) = m.a
 POMDPModelTools.ordered_observations(m::DEP) = m.o
 
-# TODO reward(m, s, a)
-# TODO support O(s, a, sp, o)
-# TODO initial state distribution
-# TODO convert_s, etc, dimensions
-# TODO better errors if T or Z return something unexpected
-
-# POMDPs.convert_s(::Type{V}, s, m::DE) where {V<:AbstractArray} = convert_to_vec(V, s, m.smap)
-# POMDPs.convert_a(::Type{V}, a, m::DE) where {V<:AbstractArray} = convert_to_vec(V, a, m.amap)
-# POMDPs.convert_o(::Type{V}, o, m::DEP) where {V<:AbstractArray} = convert_to_vec(V, o, m.omap)
-# 
-# convert_to_vec(V, x, map) = convert(V, [map[x]])
-# convert_from_vec(T, v, space) = convert(T, space[convert(Integer, first(v))])
 
 """
     DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ,[b₀],[terminal=Set()])
@@ -187,3 +175,29 @@ function filltds(t, ss, as)
     end
     return tds
 end
+
+POMDPs.convert_s(::Type{V}, s, m::DE) where V<:AbstractVector = convert_to_vec(V, s, m.smap)
+POMDPs.convert_a(::Type{V}, a, m::DE) where V<:AbstractVector = convert_to_vec(V, a, m.amap)
+POMDPs.convert_o(::Type{V}, o, m::DEP) where V<:AbstractVector = convert_to_vec(V, o, m.omap)
+
+POMDPs.convert_s(::Type{S}, v::AbstractArray{N}, m::DE{S}) where {S,N<:Number} = convert_from_vec(S, v, m.s)
+POMDPs.convert_a(::Type{A}, v::AbstractArray{N}, m::DE{<:Any,A}) where {A,N<:Number} = convert_from_vec(A, v, m.a)
+POMDPs.convert_o(::Type{O}, v::AbstractArray{N}, m::DEP{<:Any,<:Any,O}) where {O,N<:Number} = convert_from_vec(O, v, m.o)
+
+# if states are numbers, try to preserve
+POMDPs.convert_s(::Type{V}, s::Number, m::DE) where V<:AbstractVector{N} where N<:Number = convert(V, [s])
+POMDPs.convert_a(::Type{V}, a::Number, m::DE) where V<:AbstractVector{N} where N<:Number = convert(V, [a])
+POMDPs.convert_o(::Type{V}, o::Number, m::DEP) where V<:AbstractVector{N} where N<:Number = convert(V, [o])
+
+POMDPs.convert_s(::Type{N}, v::AbstractVector{F}, m::DE) where {N<:Number, F<:Number} = convert(N, first(v))
+POMDPs.convert_a(::Type{N}, v::AbstractVector{F}, m::DE) where {N<:Number, F<:Number} = convert(N, first(v))
+POMDPs.convert_o(::Type{N}, v::AbstractVector{F}, m::DEP) where {N<:Number, F<:Number} = convert(N, first(v))
+
+# if states are vectors, try to preserve
+POMDPs.convert_s(T::Type{A1}, s::A2, m::DE) where {A1<:AbstractVector, A2<:AbstractVector} = convert(T, s)
+POMDPs.convert_a(T::Type{A1}, a::A2, m::DE) where {A1<:AbstractVector, A2<:AbstractVector} = convert(T, a)
+POMDPs.convert_o(T::Type{A1}, o::A2, m::DEP) where {A1<:AbstractVector, A2<:AbstractVector} = convert(T, o)
+
+# for things that aren't numbers
+convert_to_vec(V, x, map) = convert(V, [map[x]])
+convert_from_vec(T, v, space) = convert(T, space[convert(Integer, first(v))])
