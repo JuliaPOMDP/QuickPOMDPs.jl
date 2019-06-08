@@ -22,8 +22,8 @@ struct DiscreteExplicitMDP{S,A,RF} <: MDP{S,A}
     discount::Float64
 end
 
-const DEP = DiscreteExplicitPOMDP
-const DE = Union{DiscreteExplicitPOMDP,DiscreteExplicitMDP}
+const DEP{S,A,O} = DiscreteExplicitPOMDP
+const DE{S,A} = Union{DiscreteExplicitPOMDP{S,A},DiscreteExplicitMDP{S,A}}
 
 POMDPs.discount(m::DE) = m.discount
 POMDPs.states(m::DE) = m.s
@@ -55,6 +55,13 @@ POMDPModelTools.ordered_observations(m::DEP) = m.o
 # TODO initial state distribution
 # TODO convert_s, etc, dimensions
 # TODO better errors if T or Z return something unexpected
+
+# POMDPs.convert_s(::Type{V}, s, m::DE) where {V<:AbstractArray} = convert_to_vec(V, s, m.smap)
+# POMDPs.convert_a(::Type{V}, a, m::DE) where {V<:AbstractArray} = convert_to_vec(V, a, m.amap)
+# POMDPs.convert_o(::Type{V}, o, m::DEP) where {V<:AbstractArray} = convert_to_vec(V, o, m.omap)
+# 
+# convert_to_vec(V, x, map) = convert(V, [map[x]])
+# convert_from_vec(T, v, space) = convert(T, space[convert(Integer, first(v))])
 
 """
     DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ)
