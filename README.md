@@ -17,7 +17,7 @@ This interface is designed to match the standard definition of a POMDP in the li
 - R is the reward function, and
 - γ is the discount factor.
 
-The `DiscreteExplicitPOMDP` and `DiscreteExplicitMDP` types are provided for POMDPs and MDPs with discrete spaces and explicitly defined distributions. They should offer moderately good performance on small to medium-sized problems.
+The `DiscreteExplicitPOMDP` and `DiscreteExplicitMDP` types are provided for POMDPs and MDPs with discrete spaces and explicitly defined distributions. They should offer moderately good performance on small to medium-sized problems. Instructions for defining the **initial distribution** and **terminal states** can be found in the docstrings.
 
 ### Example
 
