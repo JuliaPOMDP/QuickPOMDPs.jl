@@ -1,6 +1,11 @@
 using QuickPOMDPs
 using Test
 
-using POMDPs, POMDPPolicies, POMDPSimulators, BeliefUpdaters
+using POMDPs
+using POMDPPolicies
+using POMDPSimulators
+using BeliefUpdaters
+using POMDPModelTools
+using Random
 
 include("discrete_explicit.jl")
