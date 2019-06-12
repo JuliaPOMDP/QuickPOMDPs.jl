@@ -61,3 +61,4 @@ The classic tiger POMDP \[[Kaelbling et al. 98](http://www.sciencedirect.com/sci
 
     m = DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ)
 ```
+See the Solver tutorials in the [POMDPExamples package](https://github.com/JuliaPOMDP/POMDPExamples.jl) for examples of how to solve and simulate the problem.
