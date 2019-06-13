@@ -19,46 +19,50 @@ This interface is designed to match the standard definition of a POMDP in the li
 
 The `DiscreteExplicitPOMDP` and `DiscreteExplicitMDP` types are provided for POMDPs and MDPs with discrete spaces and explicitly defined distributions. They should offer moderately good performance on small to medium-sized problems. Instructions for defining the **initial distribution** and **terminal states** can be found in the docstrings.
 
+### Usage From Python
+
+The Discrete Explicit interface can be used from python via [pyjulia](https://github.com/JuliaPy/pyjulia). See [examples/tiger.py](/examples/tiger.py) for an example.
+
 ### Example
 
 The classic tiger POMDP \[[Kaelbling et al. 98](http://www.sciencedirect.com/science/article/pii/S000437029800023X)\] can be defined as follows:
 
 ```julia
-    S = [:left, :right]           # S, A, and O may contain any objects
-    A = [:left, :right, :listen]  # including user-defined types
-    O = [:left, :right]
-    γ = 0.95
+S = [:left, :right]           # S, A, and O may contain any objects
+A = [:left, :right, :listen]  # including user-defined types
+O = [:left, :right]
+γ = 0.95
 
-    function T(s, a, sp)
-        if a == :listen
-            return s == sp
-        else # a door is opened
-            return 0.5 #reset
-        end
+function T(s, a, sp)
+    if a == :listen
+        return s == sp
+    else # a door is opened
+        return 0.5 #reset
     end
+end
 
-    function Z(a, sp, o)
-        if a == :listen
-            if o == sp
-                return 0.85
-            else
-                return 0.15
-            end
+function Z(a, sp, o)
+    if a == :listen
+        if o == sp
+            return 0.85
         else
-            return 0.5
+            return 0.15
         end
+    else
+        return 0.5
     end
+end
 
-    function R(s, a)
-        if a == :listen  
-            return -1.0
-        elseif s == a # the tiger was found
-            return -100.0
-        else # the tiger was escaped
-            return 10.0
-        end
+function R(s, a)
+    if a == :listen  
+        return -1.0
+    elseif s == a # the tiger was found
+        return -100.0
+    else # the tiger was escaped
+        return 10.0
     end
+end
 
-    m = DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ)
+m = DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ)
 ```
 See the Solver tutorials in the [POMDPExamples package](https://github.com/JuliaPOMDP/POMDPExamples.jl) for examples of how to solve and simulate the problem.
