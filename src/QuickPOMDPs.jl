@@ -14,5 +14,6 @@ export
 
 include("discrete_explicit.jl")
 include("quick.jl")
+include("quick_error.jl")
 
 end # module
