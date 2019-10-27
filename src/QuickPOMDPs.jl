@@ -6,11 +6,14 @@ using BeliefUpdaters
 using POMDPTesting
 using UUIDs
 using NamedTupleTools
+using Random
 
 export
     DiscreteExplicitPOMDP,
     DiscreteExplicitMDP,
-    QuickMDP
+    QuickMDP,
+    QuickPOMDP,
+    MissingQuickArgument
 
 include("discrete_explicit.jl")
 include("quick.jl")

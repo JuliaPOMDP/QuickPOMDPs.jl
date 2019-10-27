@@ -16,11 +16,13 @@ function QuickMDP(id=uuid4(); kwargs...)
     return qm
 end
 
+id(::QuickMDP{ID}) where ID = ID
+
 struct QuickPOMDP{ID,S,A,O,D<:NamedTuple} <: POMDP{S,A,O}
     data::D
 end
 
-QuickPOMDP(gen::Function, id=uuid4(); kwargs...) = QuickMDP(id; gen=gen, kwargs...)
+QuickPOMDP(gen::Function, id=uuid4(); kwargs...) = QuickPOMDP(id; gen=gen, kwargs...)
 
 function QuickPOMDP(id=uuid4(); kwargs...)
     kwd = Dict{Symbol, Any}(kwargs)
@@ -29,17 +31,32 @@ function QuickPOMDP(id=uuid4(); kwargs...)
 
     S = infer_statetype(kwd)
     A = infer_actiontype(kwd)
+    O = infer_obstype(kwd)
     d = namedtuple(keys(kwd)...)(values(kwd)...)
-    qm = QuickMDP{id, S, A, typeof(d)}(d)
-    lint(qm)
+    qm = QuickPOMDP{id, S, A, O, typeof(d)}(d)
     return qm
 end
 
-const QuickModel = QuickMDP
+id(::QuickPOMDP{ID}) where ID = ID
+
+const QuickModel = Union{QuickMDP, QuickPOMDP}
 
 function quick_defaults!(kwd::Dict)
     kwd[:discount] = get(kwd, :discount, 1.0)
     kwd[:isterminal] = get(kwd, :isterminal, false)
+    
+    # memoize initialstate_distribution since it should be constant (so we can use it below for initialstate)
+    if haskey(kwd, :initialstate_distribution) && kwd[:initialstate_distribution] isa Function
+        kwd[:initialstate_distribution] = kwd[:initialstate_distribution]()
+    end
+   
+    if !haskey(kwd, :initialstate)
+        if haskey(kwd, :initialstate_distribution)
+            kwd[:initialstate] = rng -> rand(rng, kwd[:initialstate_distribution])
+        end                                      
+    end
+
+    # default for initialobs must be in the method below because the method table might change
 
     if !haskey(kwd, :stateindex)
         if haskey(kwd, :states)
@@ -67,19 +84,6 @@ function quick_defaults!(kwd::Dict)
             end
         end
     end
-
-    # memoize initialstate_distribution since it should be constant (so we can use it below for initialstate)
-    if haskey(kwd, :initialstate_distribution) && kwd[:initialstate_distribution] isa Function
-        kwd[:initialstate_distribution] = kwd[:initialstate_distribution]()
-    end
-   
-    if !haskey(kwd, :initialstate)
-        if haskey(kwd, :initialstate_distribution)
-            kwd[:initialstate] = rng -> rand(rng, kwd[:initialstate_distribution])
-        end                                      
-    end
-
-    # default for initialobs must be in the method below because the method table might change
 end
 
 function infer_statetype(kwd)
@@ -100,34 +104,52 @@ end
 
 function infer_actiontype(kwd)
     if haskey(kwd, :actiontype)
-        st = _call(Val(:actiontype), kwd[:actiontype], (), NamedTuple())
+        at = _call(Val(:actiontype), kwd[:actiontype], (), NamedTuple())
     elseif haskey(kwd, :actions)
-        st = eltype(_call(Val(:actions), kwd[:actions], (), NamedTuple()))
+        at = eltype(_call(Val(:actions), kwd[:actions], (), NamedTuple()))
     else
-        st = Any
+        at = Any
     end
-    if st == Any
+    if at == Any
         @warn("Unable to infer action type for a Quick(PO)MDP; using Any. This may have significant performance consequences. Use the actiontype keyword argument to specify a concrete action type.")
     end
-    return st
+    return at
 end
 
-function _call(namev::Val{name}, m::QuickMDP, args, kwargs=NamedTuple()) where name
+function infer_obstype(kwd)
+    if haskey(kwd, :obstype)
+        ot = _call(Val(:obstype), kwd[:obstype], (), NamedTuple())
+    elseif haskey(kwd, :observations)
+        ot = eltype(_call(Val(:observations), kwd[:observations], (), NamedTuple()))
+    elseif haskey(kwd, :initialobs) && haskey(kwd, :initialstate)
+        s0 = _call(Val(:initialstate), kwd[:initialstate], (MersenneTwister(0),), NamedTuple())
+        ot = typeof(_call(Val(:initialobs), kwd[:initialobs], (s0, MersenneTwister(0),), NamedTuple()))
+    else
+        ot = Any
+    end
+    if ot == Any
+        @warn("Unable to infer observation type for a QuickPOMDP; using Any. This may have significant performance consequences. Use the obstype keyword argument to specify a concrete observation type.")
+    end
+    return ot
+end
+
+
+function _call(namev::Val{name}, m::QuickModel, args, kwargs=NamedTuple()) where name
     _call(namev,
           get(m.data, name) do
-              throw(MissingQuickArg(m, name))
+              throw(MissingQuickArgument(m, name))
           end,
           args,
           kwargs)
 end
 
-_call(::Val, f::Function, args, kwargs) = f(args...; kwargs...)
-_call(v::Val, object, args, kwargs) = object
-_call(v::Val, d::Dict, args, kwargs) = d[args]
+_call(::Val, f::Function, args, kwargs=NamedTuple()) = f(args...; kwargs...)
+_call(v::Val, object, args, kwargs=NamedTuple()) = object
+_call(v::Val, d::Dict, args, kwargs=NamedTuple()) = d[args]
 
 macro forward_to_data(f)
     quote
-        $f(m::QuickMDP, args...; kwargs...) = _call(Val(nameof($f)), m, args, kwargs)
+        $f(m::QuickModel, args...; kwargs...) = _call(Val(nameof($f)), m, args, kwargs)
     end
 end
 
@@ -135,7 +157,7 @@ function POMDPs.transition(m::QuickModel, s, a)
     if haskey(m.data, :transition)
         return m.data.transition(s, a)
     else
-        throw(MissingQuickArg(m, :transition, types=[Function], also=[:gen]))
+        throw(MissingQuickArgument(m, :transition, types=[Function], also=[:gen]))
     end
 end
 
@@ -143,7 +165,7 @@ function POMDPs.observation(m::QuickPOMDP, args...)
     if haskey(m.data, :observation)
         return m.data.observation(args...)
     else
-        throw(MissingQuickArg(m, :observation, types=[Function], also=[:gen]))
+        throw(MissingQuickArgument(m, :observation, types=[Function], also=[:gen]))
     end
 end
 
@@ -151,25 +173,16 @@ end
 @forward_to_data POMDPs.reward
 
 @forward_to_data POMDPs.gen # Note DDNNode and DDNOut methods explicitly not forwarded
-@forward_to_data POMDPs.initialstate
 
-# function POMDPs.initialstate(m::QuickModel, rng)
-#     if haskey(m.data, :initialstate)
-#         return _call(Val(:initialstate), m, (rng,))
-#     elseif haskey(m.data, :initialstate_distribution)
-#         return rand(rng, _call(Val(:initialstate_distribution), m))
-#     else
-#         throw(MissingQuickArg(m, :initialstate, types=[statetype(m), Function], also=[:initialstate_distribution]))
-#     end
-# end
+POMDPs.initialstate(m::QuickModel, rng::AbstractRNG) = _call(Val(:initialstate), m, (rng,))
 
-function POMDPs.initialobs(m::QuickPOMDP, s, rng)
+function POMDPs.initialobs(m::QuickPOMDP, s, rng::AbstractRNG)
     if haskey(m.data, :initialobs)
         return _call(Val(:initialobs), m, (s, rng))
     elseif haskey(m.data, :observation) && hasmethod(m.data.observation, typeof((s,)))
         return rand(rng, m.data.observation(s))
     else
-        throw(MissingQuickArg(m, :initialobs, types=[obstype(m), Function], also=[:observation]))
+        throw(MissingQuickArgument(m, :initialobs, types=[obstype(m), Function], also=[:observation]))
     end
 end
 
