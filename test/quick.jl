@@ -54,3 +54,37 @@ end
     @test all(isa.(hist[:s], statetype(mountaincar)))
     @test last(collect(hist[:sp]))[1] > 0.5
 end
+
+@testset "Mountan Car Visualization" begin
+    m = begin
+        include("../examples/mountaincar_with_visualization.jl")
+    end
+    energize = FunctionPolicy(
+        function (s)
+            if s[2] < 0.0
+                return minimum(actions(m))
+            else
+                return maximum(actions(m))
+            end
+        end
+    ) 
+    sim = HistoryRecorder(max_steps=1000)
+    hist = simulate(sim, m, energize)
+    @test maximum(hist[:r]) == 100.0
+    @test all(isa.(hist[:s], statetype(mountaincar)))
+    @test last(collect(hist[:sp]))[1] > 0.5
+    draw(SVG("test_render.svg", 5cm, 4cm), render(m, (s=(0.2, 0.0),)))
+    @test isfile("test_render.svg")
+end
+
+@testset "Simple Light-Dark" begin
+    m = begin
+        include("../examples/lightdark.jl")
+    end
+    p = RandomPolicy(m, rng = MersenneTwister(2))
+    sim = HistoryRecorder(max_steps=1000)
+    hist = simulate(sim, m, p)
+    @test all(-100 .<= hist[:r] .<= 100)
+    @test all(isa.(hist[:s], statetype(m)))
+    @test last(collect(hist[:sp])) == 61
+end

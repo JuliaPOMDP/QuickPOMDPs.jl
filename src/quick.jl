@@ -172,7 +172,13 @@ end
 @forward_to_data POMDPs.initialstate_distribution
 @forward_to_data POMDPs.reward
 
-@forward_to_data POMDPs.gen # Note DDNNode and DDNOut methods explicitly not forwarded
+function POMDPs.gen(m::QuickModel, s, a, rng)
+    if haskey(m.data, :gen)
+        return m.data.gen(s, a, rng)
+    else
+        return NamedTuple()
+    end
+end
 
 POMDPs.initialstate(m::QuickModel, rng::AbstractRNG) = _call(Val(:initialstate), m, (rng,))
 
