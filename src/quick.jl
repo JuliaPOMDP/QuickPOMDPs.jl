@@ -2,8 +2,22 @@ struct QuickMDP{ID,S,A,D<:NamedTuple} <: MDP{S,A}
     data::D
 end
 
+"""
+    QuickMDP(gen::Function, [id]; kwargs...)
+
+Construct a generative MDP model with the function `gen` and keyword arguments.
+
+`gen` should take three arguments: a state, an action, and a random number generator. It should return a `NamedTuple` with keys `sp` for the next state and `r` for the reward.
+
+Keywords can be static objects or functions. See the QuickPOMDPs.jl documentation for more information.
+"""
 QuickMDP(gen::Function, id=uuid4(); kwargs...) = QuickMDP(id; gen=gen, kwargs...)
 
+"""
+    QuickMDP([id]; kwargs...)
+
+Construct an MDP model with keyword arguments. Keywords can be static objects or functions. See the QuickPOMDPs.jl documentation for more information.
+"""
 function QuickMDP(id=uuid4(); kwargs...)
     kwd = Dict{Symbol, Any}(kwargs)
 
@@ -22,8 +36,22 @@ struct QuickPOMDP{ID,S,A,O,D<:NamedTuple} <: POMDP{S,A,O}
     data::D
 end
 
+"""
+    QuickPOMDP(gen::Function, [id]; kwargs...)
+
+Construct a generative POMDP model with the function `gen` and keyword arguments.
+
+`gen` should take three arguments: a state, an action, and a random number generator. It should return a `NamedTuple` with keys `sp` for the next state, `o` for the observation, and `r` for the reward.
+
+Keywords can be static objects or functions. See the QuickPOMDPs.jl documentation for more information.
+"""
 QuickPOMDP(gen::Function, id=uuid4(); kwargs...) = QuickPOMDP(id; gen=gen, kwargs...)
 
+"""
+    QuickPOMDP([id]; kwargs...)
+
+Construct an POMDP model with keyword arguments. Keywords can be static objects or functions. See the QuickPOMDPs.jl documentation for more information.
+"""
 function QuickPOMDP(id=uuid4(); kwargs...)
     kwd = Dict{Symbol, Any}(kwargs)
 
