@@ -56,7 +56,7 @@ POMDPModelTools.ordered_observations(m::DEP) = m.o
 
 
 """
-    DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ,[b₀],[terminal=Set()])
+    DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ,[b₀],[terminals=Set()])
 
 Create a POMDP defined by the tuple (S,A,O,T,Z,R,γ).
 
@@ -118,7 +118,7 @@ function DiscreteExplicitPOMDP(s, a, o, t, z, r, discount, b0=Uniform(s); termin
 end
 
 """
-    DiscreteExplicitMDP(S,A,T,R,γ,[p₀])
+    DiscreteExplicitMDP(S,A,T,R,γ,[p₀],[terminals=Set()])
 
 Create an MDP defined by the tuple (S,A,T,R,γ).
 
