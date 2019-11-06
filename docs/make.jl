@@ -4,12 +4,13 @@ using QuickPOMDPs
 makedocs(
     sitename = "QuickPOMDPs",
     format = Documenter.HTML(),
-    modules = [QuickPOMDPs]
+    modules = [QuickPOMDPs],
+    pages = ["index.md",
+             "discrete_explicit.md",
+             "quick.md"
+            ]
 )
 
-# Documenter can also automatically deploy documentation to gh-pages.
-# See "Hosting Documentation" and deploydocs() in the Documenter manual
-# for more information.
-#=deploydocs(
-    repo = "<repository url>"
-)=#
+deploydocs(
+    repo = "github.com/JuliaPOMDP/QuickPOMDPs.jl.git"
+)
