@@ -12,5 +12,6 @@ The package contains the two interfaces below. Please see [the documentation](ht
 
 - The **Discrete Explicit Interface**, is suitable for problems with small discrete state, action, and observation spaces. This interface is pedagogically useful because each element of the ``(S, A, O, R, T, Z, \gamma)`` tuple for a POMDP and ``(S, A, R, T, \gamma)`` tuple for an MDP is defined explicitly in a straightforward manner. **Example:** [todo: link to docs]
 - The **Quick Interface** is much more flexible, exposing nearly all of the features of POMDPs.jl as constructor keyword arguments. **Example:** [examples/mountaincar_with_visualization.jl](/examples/mountaincar_with_visualization.jl)
+ <iframe src="https://raw.githubusercontent.com/JuliaPOMDP/QuickPOMDPs.jl/master/examples/mountaincar.jl"></iframe> 
 
 The package can also be used from **[Python](https://www.python.org)** via [pyjulia](https://github.com/JuliaPy/pyjulia). See [examples/tiger.py](https://github.com/JuliaPOMDP/QuickPOMDPs.jl/blob/master/examples/tiger.py) for an example.
