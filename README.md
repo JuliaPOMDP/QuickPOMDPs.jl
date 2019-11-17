@@ -16,7 +16,7 @@ The package can also be used from **[Python](https://www.python.org)** via [pyju
 
 ## Quick Interface
 
-The Quick Interface exposes nearly all of the features of POMDPs.jl as constructor keyword arguments. Example:
+The Quick Interface exposes nearly all of the features of POMDPs.jl as constructor keyword arguments. [Documentation](https://juliapomdp.github.io/QuickPOMDPs.jl/stable/quick/), Example:
 
 ```julia
 mountaincar = QuickMDP(
@@ -40,7 +40,7 @@ mountaincar = QuickMDP(
 
 ## Discrete Explicit Interface
 
-The Discrete Explicit Interface is suitable for problems with small discrete state, action, and observation spaces. This interface is pedagogically useful because each element of the (S, A, O, R, T, Z, γ) tuple for a POMDP and (S, A, R, T, γ) tuple for an MDP is defined explicitly in a straightforward manner. Example:
+The Discrete Explicit Interface is suitable for problems with small discrete state, action, and observation spaces. This interface is pedagogically useful because each element of the (S, A, O, R, T, Z, γ) tuple for a POMDP and (S, A, R, T, γ) tuple for an MDP is defined explicitly in a straightforward manner. [Documentation](https://juliapomdp.github.io/QuickPOMDPs.jl/stable/discrete_explicit/) Example:
 
 ```julia
 S = [:left, :right]
