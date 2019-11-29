@@ -7,6 +7,7 @@ using POMDPTesting
 using UUIDs
 using NamedTupleTools
 using Random
+using PyCall
 
 export
     DiscreteExplicitPOMDP,

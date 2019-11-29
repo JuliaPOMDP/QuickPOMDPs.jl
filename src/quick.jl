@@ -55,6 +55,7 @@ Construct an POMDP model with keyword arguments. Keywords can be static objects 
 function QuickPOMDP(id=uuid4(); kwargs...)
     kwd = Dict{Symbol, Any}(kwargs)
 
+    convert_pyobjects!(kwd)
     quick_defaults!(kwd)
 
     S = infer_statetype(kwd)
@@ -68,6 +69,16 @@ end
 id(::QuickPOMDP{ID}) where ID = ID
 
 const QuickModel = Union{QuickMDP, QuickPOMDP}
+
+function convert_pyobjects!(kwd::Dict)
+    for (k, v) in kwd
+        if v isa PyObject
+            jv = convert(PyAny, v)
+            kwd[k] = jv
+            println("converting $v to $jv")
+        end
+    end
+end
 
 function quick_defaults!(kwd::Dict)
     kwd[:discount] = get(kwd, :discount, 1.0)
@@ -111,6 +122,11 @@ function quick_defaults!(kwd::Dict)
                 kwd[:obsindex] = Dict(s=>i for (i,s) in enumerate(observations))
             end
         end
+    end
+
+    states = _call(Val(:states), kwd[:states], ())
+    for s in states
+        @show s
     end
 end
 
