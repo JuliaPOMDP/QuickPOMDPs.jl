@@ -173,7 +173,7 @@ end
 
 _call(::Val, f::Function, args, kwargs=NamedTuple()) = f(args...; kwargs...)
 _call(v::Val, object, args, kwargs=NamedTuple()) = object
-_call(v::Val, d::Dict, args, kwargs=NamedTuple()) = d[args]
+_call(v::Val, d::Dict, args, kwargs=NamedTuple()) = d[args...]
 
 macro forward_to_data(f)
     quote

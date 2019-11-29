@@ -33,6 +33,10 @@
     @test_throws MissingQuickArgument obsindex(qp, 1)
     
     @test_throws MissingQuickArgument gen(DDNOut(:sp,:o,:r), qp, 1, 1, MersenneTwister(2))
+
+    qp = QuickMDP(states=[3,2,1], actions=[1,2,3])
+    @test ordered_states(qp) == [3,2,1]
+    @test ordered_actions(qp) == [1,2,3]
 end
 
 @testset "Mountan Car" begin
