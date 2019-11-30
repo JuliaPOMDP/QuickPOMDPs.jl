@@ -87,7 +87,8 @@ end
     end
     p = RandomPolicy(m, rng = MersenneTwister(2))
     sim = HistoryRecorder(max_steps=1000)
-    hist = simulate(sim, m, p)
+    up = DiscreteUpdater(m)
+    hist = simulate(sim, m, p, up)
     @test all(-100 .<= hist[:r] .<= 100)
     @test all(isa.(hist[:s], statetype(m)))
     @test last(collect(hist[:sp])) == 61
