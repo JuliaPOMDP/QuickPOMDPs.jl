@@ -73,9 +73,7 @@ const QuickModel = Union{QuickMDP, QuickPOMDP}
 function convert_pyobjects!(kwd::Dict)
     for (k, v) in kwd
         if v isa PyObject && pybuiltin("callable")(v)
-            jv = convert(Function, v)
-            kwd[k] = jv
-            println("converting $v to $jv")
+            kwd[k] = convert(Function, v)
         end
     end
 end
