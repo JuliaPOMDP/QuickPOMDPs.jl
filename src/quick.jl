@@ -72,8 +72,8 @@ const QuickModel = Union{QuickMDP, QuickPOMDP}
 
 function convert_pyobjects!(kwd::Dict)
     for (k, v) in kwd
-        if v isa PyObject
-            jv = convert(PyAny, v)
+        if v isa PyObject && pybuiltin("callable")(v)
+            jv = convert(Function, v)
             kwd[k] = jv
             println("converting $v to $jv")
         end
@@ -122,11 +122,6 @@ function quick_defaults!(kwd::Dict)
                 kwd[:obsindex] = Dict(s=>i for (i,s) in enumerate(observations))
             end
         end
-    end
-
-    states = _call(Val(:states), kwd[:states], ())
-    for s in states
-        @show s
     end
 end
 
