@@ -21,7 +21,9 @@ Construct an MDP model with keyword arguments. Keywords can be static objects or
 function QuickMDP(id=uuid4(); kwargs...)
     kwd = Dict{Symbol, Any}(kwargs)
 
-    map!(preprocess, values(kwd))
+    for (k, v) in pairs(kwd)
+        kwd[k] = preprocess(v)
+    end
     quick_defaults!(kwd)
 
     S = infer_statetype(kwd)
@@ -56,7 +58,9 @@ Construct an POMDP model with keyword arguments. Keywords can be static objects 
 function QuickPOMDP(id=uuid4(); kwargs...)
     kwd = Dict{Symbol, Any}(kwargs)
 
-    map!(preprocess, values(kwd))
+    for (k, v) in pairs(kwd)
+        kwd[k] = preprocess(v)
+    end
     quick_defaults!(kwd)
 
     S = infer_statetype(kwd)
