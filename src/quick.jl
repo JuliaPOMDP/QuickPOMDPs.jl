@@ -21,6 +21,7 @@ Construct an MDP model with keyword arguments. Keywords can be static objects or
 function QuickMDP(id=uuid4(); kwargs...)
     kwd = Dict{Symbol, Any}(kwargs)
 
+    map!(preprocess, values(kwd))
     quick_defaults!(kwd)
 
     S = infer_statetype(kwd)
@@ -55,6 +56,7 @@ Construct an POMDP model with keyword arguments. Keywords can be static objects 
 function QuickPOMDP(id=uuid4(); kwargs...)
     kwd = Dict{Symbol, Any}(kwargs)
 
+    map!(preprocess, values(kwd))
     quick_defaults!(kwd)
 
     S = infer_statetype(kwd)
@@ -68,6 +70,9 @@ end
 id(::QuickPOMDP{ID}) where ID = ID
 
 const QuickModel = Union{QuickMDP, QuickPOMDP}
+
+"Function that is called on each keyword argument before anything else is done. This was designed as a hook to allow other packages to handle PyObjects."
+preprocess(x) = x
 
 function quick_defaults!(kwd::Dict)
     kwd[:discount] = get(kwd, :discount, 1.0)

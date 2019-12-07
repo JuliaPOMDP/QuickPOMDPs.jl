@@ -93,3 +93,12 @@ end
     @test all(isa.(hist[:s], statetype(m)))
     @test last(collect(hist[:sp])) == 61
 end
+
+@testset "preprocess" begin
+    struct A end
+    QuickPOMDPs.preprocess(::Type{A}) = Char 
+    qm = QuickMDP(statetype=A, actiontype=Int)
+    @test statetype(qm) == Char
+    qp = QuickPOMDP(statetype=A, actiontype=Int, obstype=Int)
+    @test statetype(qp) == Char
+end
