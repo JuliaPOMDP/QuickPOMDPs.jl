@@ -1,7 +1,7 @@
 name = "QuickPOMDPs"
 uuid = "8af83fb2-a731-493c-9049-9e19dbce6165"
 authors = ["Zachary Sunberg <sunbergzach@gmail.com>"]
-version = "0.2.2"
+version = "0.2.3"
 
 [deps]
 BeliefUpdaters = "8bb6e9a1-7d73-552c-a44a-e5dc5634aac4"
@@ -13,18 +13,18 @@ Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 
 [compat]
-POMDPs = "0.8.1"
-POMDPModelTools = "0.2.0"
 BeliefUpdaters = "0.1.2"
 NamedTupleTools = "0.11.0"
-POMDPTesting = "0.2.0"
+POMDPModelTools = "0.2.0"
+POMDPTesting = "0.2.1"
+POMDPs = "0.8.1"
 julia = "1"
 
 [extras]
+Compose = "a81c6b42-2e10-5240-aca2-a61377ecd94b"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 POMDPPolicies = "182e52fb-cfd0-5e46-8c26-fd0667c990f4"
 POMDPSimulators = "e0d0a172-29c6-5d4e-96d0-f262df5d01fd"
-Compose = "a81c6b42-2e10-5240-aca2-a61377ecd94b"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]

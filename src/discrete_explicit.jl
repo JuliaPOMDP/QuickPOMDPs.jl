@@ -112,7 +112,7 @@ function DiscreteExplicitPOMDP(s, a, o, t, z, r, discount, b0=Uniform(s); termin
         discount, b0, convert(Set{eltype(ss)}, terminals)
     )
 
-    probability_check(m)
+    @assert has_consistent_distributions(m)
 
     return m
 end
@@ -149,7 +149,7 @@ function DiscreteExplicitMDP(s, a, t, r, discount, p0=Uniform(s); terminals=Set(
         discount, p0, convert(Set{eltype(ss)}, terminals)
     )
 
-    trans_prob_consistency_check(m)
+    @assert has_consistent_distributions(m)
 
     return m
 end
