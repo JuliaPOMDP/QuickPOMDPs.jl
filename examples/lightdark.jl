@@ -18,9 +18,9 @@ simple_lightdark = QuickPOMDP(
 
     transition = function (s, a)
         if a == 0
-            return SparseCat(r+1, 1.0)
+            return Deterministic(r+1)
         else
-            return SparseCat(clamp(s+a, -r, r), 1.0)
+            return Deterministic(clamp(s+a, -r, r))
         end
     end,
 
