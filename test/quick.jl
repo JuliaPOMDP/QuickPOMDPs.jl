@@ -63,6 +63,9 @@ end
     m = begin
         include("../examples/mountaincar_with_visualization.jl")
     end
+    
+    @inferred gen(DDNOut(:sp,:r), m, (0.2, 0.0), 0.0, MersenneTwister(2))
+
     energize = FunctionPolicy(
         function (s)
             if s[2] < 0.0
