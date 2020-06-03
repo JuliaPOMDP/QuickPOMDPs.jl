@@ -1,9 +1,9 @@
 @testset "Quick" begin
     qm = QuickMDP(statetype=Int, actiontype=Int)
-    @test statetype(qm) == Int
-    @test actiontype(qm) == Int
-    @test discount(qm) == 1.0
-    @test isterminal(qm, 1) == false
+    @test @inferred(statetype(qm)) == Int
+    @test @inferred(actiontype(qm)) == Int
+    @test @inferred(discount(qm)) == 1.0
+    @test @inferred(isterminal(qm, 1)) == false
     @test_throws MissingQuickArgument transition(qm, 1, 1)
     @test_throws MissingQuickArgument initialstate_distribution(qm)
     @test_throws MissingQuickArgument reward(qm, 1, 1, 1)
@@ -14,11 +14,11 @@
     @test_throws MissingQuickArgument actionindex(qm, 1)
  
     qp = QuickPOMDP(obstype=Int)
-    @test obstype(qp) == Int
-    @test statetype(qp) == Any
-    @test actiontype(qp) == Any
-    @test discount(qp) == 1.0
-    @test isterminal(qp, 1) == false
+    @test @inferred(obstype(qp)) == Int
+    @test @inferred(statetype(qp)) == Any
+    @test @inferred(actiontype(qp)) == Any
+    @test @inferred(discount(qp)) == 1.0
+    @test @inferred(isterminal(qp, 1)) == false
     @test_throws MissingQuickArgument transition(qp, 1, 1)
     @test_throws MissingQuickArgument observation(qp, 1, 1)
     @test_throws MissingQuickArgument initialstate_distribution(qp)
