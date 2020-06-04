@@ -185,7 +185,7 @@ _call(v::Val, object, args, kwargs=NamedTuple()) = object
 _call(v::Val, d::Dict, args, kwargs=NamedTuple()) = d[args...]
 
 macro forward_to_data(f)
-    @assert f.head == :.
+    @assert f.head == :. "@forward_to_data must be used with a module-qualified function expression, e.g. @forward_to_data POMDPs.discount"
     quote
         $f(m::QuickModel, args...; kwargs...) = _call(Val($(f.args[2])), m, args, kwargs)
     end
