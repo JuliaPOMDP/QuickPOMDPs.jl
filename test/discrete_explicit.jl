@@ -49,9 +49,9 @@
     @test rsum == -10.0
 
     dm = DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ,Deterministic(:left))
-    @test initialstate(dm, Random.GLOBAL_RNG) == :left
+    @test rand(Random.GLOBAL_RNG, initialstate(dm)) == :left
     tm = DiscreteExplicitPOMDP(S,A,O,T,Z,R,γ,terminals=Set(S))
-    @test isterminal(tm, initialstate(tm, Random.GLOBAL_RNG))
+    @test isterminal(tm, rand(Random.GLOBAL_RNG, initialstate(tm)))
 
     for s in states(m)
         @test convert_s(statetype(m), convert_s(Vector{Float64}, s, m), m) == s

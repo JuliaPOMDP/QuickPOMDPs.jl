@@ -32,13 +32,10 @@ const DE{S,A} = Union{DiscreteExplicitPOMDP{S,A},DiscreteExplicitMDP{S,A}}
 POMDPs.discount(m::DE) = m.discount
 POMDPs.states(m::DE) = m.s
 POMDPs.actions(m::DE) = m.a
-POMDPs.n_states(m::DE) = length(m.s)
-POMDPs.n_actions(m::DE) = length(m.a)
 POMDPs.stateindex(m::DE, s) = m.smap[s]
 POMDPs.actionindex(m::DE, a) = m.amap[a]
 
 POMDPs.observations(m::DEP) = m.o
-POMDPs.n_observations(m::DEP) = length(m.o)
 POMDPs.obsindex(m::DEP, o) = m.omap[o]
 POMDPModelTools.obs_weight(m::DEP, a, sp, o) = m.ofun(a, sp, o)
 
@@ -46,7 +43,7 @@ POMDPs.transition(m::DE, s, a) = m.tds[s,a]
 POMDPs.observation(m::DEP, a, sp) = m.ods[a,sp]
 POMDPs.reward(m::DE, s, a) = m.r(s, a)
 
-POMDPs.initialstate_distribution(m::DE) = m.initial
+POMDPs.initialstate(m::DE) = m.initial
 
 POMDPs.isterminal(m::DE,s) = s in m.terminals
 

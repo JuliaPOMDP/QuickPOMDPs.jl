@@ -34,5 +34,5 @@ simple_lightdark = QuickPOMDP(
         end
     end,
 
-    initialstate_distribution = POMDPModelTools.Uniform(div(-r,2):div(-r,2))
+    initialstate = POMDPModelTools.Uniform(div(-r,2):div(-r,2))
 )

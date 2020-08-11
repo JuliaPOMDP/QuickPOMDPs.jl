@@ -18,7 +18,7 @@ function Base.showerror(io::IO, ex::MissingQuickArgument)
         basetype = string(typeof(ex.m))
     end
     println(io, """
-            No definition of "$(ex.name)" for a $basetype (id=$(id(ex.m))).
+            No definition of "$(ex.name)" for $basetype with id = $(id(ex.m)).
 
             Please specify it with a `$(ex.name)` keyword argument in the $basetype constructor.
             """)
