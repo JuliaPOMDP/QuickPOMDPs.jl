@@ -5,9 +5,9 @@
     @test @inferred(discount(qm)) == 1.0
     @test @inferred(isterminal(qm, 1)) == false
     @test_throws MissingQuickArgument transition(qm, 1, 1)
-    @test_throws MissingQuickArgument initialstate_distribution(qm)
+    @test_throws MissingQuickArgument initialstate(qm)
     @test_throws MissingQuickArgument reward(qm, 1, 1, 1)
-    @test_throws MissingQuickArgument initialstate(qm, MersenneTwister(2))
+    @test_throws MissingQuickArgument initialstate(qm)
     @test_throws MissingQuickArgument states(qm)
     @test_throws MissingQuickArgument actions(qm)
     @test_throws MissingQuickArgument stateindex(qm, 1)
@@ -21,10 +21,10 @@
     @test @inferred(isterminal(qp, 1)) == false
     @test_throws MissingQuickArgument transition(qp, 1, 1)
     @test_throws MissingQuickArgument observation(qp, 1, 1)
-    @test_throws MissingQuickArgument initialstate_distribution(qp)
+    @test_throws MissingQuickArgument initialstate(qp)
     @test_throws MissingQuickArgument reward(qp, 1, 1, 1)
-    @test_throws MissingQuickArgument initialstate(qp, MersenneTwister(20))
-    @test_throws MissingQuickArgument initialobs(qp, 1, MersenneTwister(1))
+    @test_throws MissingQuickArgument initialstate(qp)
+    @test_throws MissingQuickArgument initialobs(qp, 1)
     @test_throws MissingQuickArgument states(qp)
     @test_throws MissingQuickArgument actions(qp)
     @test_throws MissingQuickArgument observations(qp)
@@ -43,6 +43,9 @@ end
     mountaincar = begin
         include("../examples/mountaincar.jl")
     end
+
+    @show statetype(mountaincar)
+
     energize = FunctionPolicy(
         function (s)
             if s[2] < 0.0
@@ -53,7 +56,9 @@ end
         end
     ) 
     sim = HistoryRecorder(max_steps=1000)
-    hist = simulate(sim, mountaincar, energize)
+    # below should work with a new version of POMDPSimulators
+    @test_skip simulate(sim, mountaincar, energize) != nothing
+    hist = simulate(sim, mountaincar, energize, rand(initialstate(mountaincar)))
     @test maximum(hist[:r]) == 100.0
     @test all(isa.(hist[:s], statetype(mountaincar)))
     @test last(collect(hist[:sp]))[1] > 0.5
@@ -76,7 +81,9 @@ end
         end
     ) 
     sim = HistoryRecorder(max_steps=1000)
-    hist = simulate(sim, m, energize)
+    # below should work when POMDPSimulators is fixed, but it can be deleted then
+    @test_skip simulate(sim, m, energize) != nothing
+    hist = simulate(sim, m, energize, rand(initialstate(m)))
     @test maximum(hist[:r]) == 100.0
     @test all(isa.(hist[:s], statetype(mountaincar)))
     @test last(collect(hist[:sp]))[1] > 0.5
