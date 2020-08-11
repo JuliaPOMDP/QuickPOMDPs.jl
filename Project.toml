@@ -15,7 +15,7 @@ UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 [compat]
 BeliefUpdaters = "0.1.2"
 NamedTupleTools = "0.11.0"
-POMDPModelTools = "0.2.0"
+POMDPModelTools = "0.2.0, 0.3"
 POMDPTesting = "0.2.1"
 POMDPs = "0.8.1"
 julia = "1"
