@@ -242,3 +242,11 @@ function POMDPModelTools.obs_weight(m::QuickPOMDP, args...)
     end
 end
 @forward_to_data POMDPModelTools.render
+
+function POMDPModelTools.StateActionReward(m::Union{QuickPOMDP,QuickMDP})
+    if hasmethod(m.data[:reward], Typle{statetype(m), actiontype(m)})
+        return FunctionSAR(m)
+    else
+        return LazyCachedSAR(m)
+    end
+end
