@@ -32,7 +32,7 @@
     @test_throws MissingQuickArgument actionindex(qp, 1)
     @test_throws MissingQuickArgument obsindex(qp, 1)
     
-    @test_throws MissingQuickArgument gen(DDNOut(:sp,:o,:r), qp, 1, 1, MersenneTwister(2))
+    @test_throws MissingQuickArgument @gen(:sp,:o,:r)(qp, 1, 1, MersenneTwister(2))
 
     qp = QuickMDP(states=[3,2,1], actions=[1,2,3])
     @test ordered_states(qp) == [3,2,1]
@@ -69,7 +69,7 @@ end
         include("../examples/mountaincar_with_visualization.jl")
     end
     
-    @inferred gen(DDNOut(:sp,:r), m, (0.2, 0.0), 0.0, MersenneTwister(2))
+    @inferred @gen(:sp,:r)(m, (0.2, 0.0), 0.0, MersenneTwister(2))
 
     energize = FunctionPolicy(
         function (s)
@@ -111,4 +111,16 @@ struct A end
     @test statetype(qm) == Char
     qp = QuickPOMDP(statetype=A, actiontype=Int, obstype=Int)
     @test statetype(qp) == Char
+end
+
+@testset "state action reward" begin
+    qm = QuickMDP(states=1:3, actions=1:3, reward=(s, a)->0.0)
+    @test StateActionReward(qm) isa FunctionSAR
+    qm = QuickMDP(states=1:3, actions=1:3, reward=(s, a, sp)->0.0)
+    @test StateActionReward(qm) isa LazyCachedSAR
+
+    qp = QuickPOMDP(states=1:3, actions=1:3, observations=1:3, reward=(s, a)->0.0)
+    @test StateActionReward(qp) isa FunctionSAR
+    qp = QuickPOMDP(states=1:3, actions=1:3, observations=1:3, reward=(s, a, sp, o)->0.0)
+    @test StateActionReward(qp) isa LazyCachedSAR
 end

@@ -244,7 +244,7 @@ end
 @forward_to_data POMDPModelTools.render
 
 function POMDPModelTools.StateActionReward(m::Union{QuickPOMDP,QuickMDP})
-    if hasmethod(m.data[:reward], Typle{statetype(m), actiontype(m)})
+    if hasmethod(m.data[:reward], Tuple{statetype(m), actiontype(m)})
         return FunctionSAR(m)
     else
         return LazyCachedSAR(m)
