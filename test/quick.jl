@@ -124,3 +124,16 @@ end
     qp = QuickPOMDP(states=1:3, actions=1:3, observations=1:3, reward=(s, a, sp, o)->0.0)
     @test StateActionReward(qp) isa LazyCachedSAR
 end
+
+@testset "variable args" begin
+    m = QuickMDP(states=1:3, actions=1:3, reward=(s, a)->0.0)
+    @test @inferred(reward(m, 1, 2)) == 0.0
+    @test @inferred(reward(m, 1, 2, 3)) == 0.0
+    m = QuickPOMDP(states=1:3, actions=1:3, observations=1:3, reward=(s, a)->0.0)
+    @test @inferred(reward(m, 1, 2)) == 0.0
+    @test @inferred(reward(m, 1, 2, 3)) == 0.0
+    @test @inferred(reward(m, 1, 2, 3, 1)) == 0.0
+    m = QuickPOMDP(states=1:3, actions=1:3, observations=1:3, observation=(a, sp)->Deterministic(sp))
+    @test rand(@inferred(observation(m, 2, 3))) == 3
+    @test rand(@inferred(observation(m, 1, 2, 3))) == 3
+end
