@@ -123,6 +123,10 @@ function quick_warnings(kwd)
             end
         end
     end
+
+    if haskey(kwd, :reward) && !(kwd[:reward] isa Function)
+        @warn("`reward` must be a function; got $(kwd[:reward])")
+    end
 end
 
 function infer_statetype(kwd)
@@ -203,14 +207,42 @@ end
 
 function POMDPs.observation(m::QuickPOMDP, args...)
     if haskey(m.data, :observation)
+        obs = m.data[:observation]
+        if static_hasmethod(obs, typeof(args))
+            return obs(args...)
+        elseif length(args) == 3 && static_hasmethod(obs, typeof(args[2:3]))
+            return obs(args[2:3]...)
+        else
+            return obs(args...)
+        end
         return m.data.observation(args...)
     else
         throw(MissingQuickArgument(m, :observation, types=[Function], also=[:gen]))
     end
 end
 
+function POMDPs.reward(m::QuickModel, args...)
+    if haskey(m.data, :reward)
+        r = m.data[:reward]
+        if static_hasmethod(r, typeof(args)) # static_hasmethod could cause issues, but I think it is worth doing in this single spot
+            return r(args...)
+        elseif m isa POMDP && length(args) == 4
+            if static_hasmethod(r, typeof(args[1:3])) # (s, a, sp, o) -> (s, a, sp)
+                return r(args[1:3]...)
+            elseif static_hasmethod(r, typeof(args[1:2])) # (s, a, sp, o) -> (s, a)
+                return r(args[1:2]...)
+            end
+        elseif length(args) == 3 && static_hasmethod(r, typeof(args[1:2])) # (s, a, sp) -> (s, a)
+            return r(args[1:2]...)
+        else
+            return r(args...)
+        end
+    else
+        throw(MissingQuickArgument(m, :reward))
+    end
+end
+
 @forward_to_data POMDPs.initialstate
-@forward_to_data POMDPs.reward
 @forward_to_data POMDPs.initialobs
 
 function POMDPs.gen(m::QuickModel, s, a, rng)
