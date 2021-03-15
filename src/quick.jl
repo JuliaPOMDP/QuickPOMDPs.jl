@@ -115,8 +115,8 @@ function quick_warnings(kwd)
     if haskey(kwd, :initialstate)
         isd = _call(Val(:initialstate), kwd[:initialstate], ())
         try rand(MersenneTwister(0), isd)
-        catch
-            if ex isa MethodError
+        catch ex
+            if ex isa MethodError || ex isa ArgumentError
                 @warn("Unable to call rand(rng, $isd). Is the `initialstate` that you supplied a distribution?")
             else
                 rethrow(ex)

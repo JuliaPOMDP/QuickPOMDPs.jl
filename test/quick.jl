@@ -137,3 +137,7 @@ end
     @test rand(@inferred(observation(m, 2, 3))) == 3
     @test rand(@inferred(observation(m, 1, 2, 3))) == 3
 end
+
+@testset "#23" begin
+    @test_throws ArgumentError QuickPOMDP(initialstate=:test)
+end
