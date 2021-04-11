@@ -136,6 +136,10 @@ end
     m = QuickPOMDP(states=1:3, actions=1:3, observations=1:3, observation=(a, sp)->Deterministic(sp))
     @test rand(@inferred(observation(m, 2, 3))) == 3
     @test rand(@inferred(observation(m, 1, 2, 3))) == 3
+    @test @inferred(obs_weight(m, 2, 3, 3)) == 1.0
+    @test @inferred(obs_weight(m, 2, 3, 2)) == 0.0
+    @test @inferred(obs_weight(m, 1, 2, 3, 3)) == 1.0
+    @test @inferred(obs_weight(m, 1, 2, 3, 2)) == 0.0
 end
 
 @testset "#23" begin
