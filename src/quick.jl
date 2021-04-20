@@ -270,7 +270,7 @@ function POMDPModelTools.obs_weight(m::QuickPOMDP, args...)
     elseif haskey(m.data, :observation)
         return pdf(observation(m, args[1:end-1]...), args[end])
     else
-        throw(MissingQuickArgument(m, :obs_weight, types[Function], also=[:observation]))
+        throw(MissingQuickArgument(m, :obs_weight, types=[Function], also=[:observation]))
     end
 end
 @forward_to_data POMDPModelTools.render
