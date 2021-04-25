@@ -1,7 +1,7 @@
 name = "QuickPOMDPs"
 uuid = "8af83fb2-a731-493c-9049-9e19dbce6165"
 authors = ["Zachary Sunberg <sunbergzach@gmail.com>"]
-version = "0.2.10"
+version = "0.2.11"
 
 [deps]
 BeliefUpdaters = "8bb6e9a1-7d73-552c-a44a-e5dc5634aac4"
