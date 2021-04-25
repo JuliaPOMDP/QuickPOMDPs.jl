@@ -94,9 +94,16 @@ function quick_defaults!(kwd::Dict)
 
     if !haskey(kwd, :actionindex)
         if haskey(kwd, :actions)
-            actions = _call(Val(:actions), kwd[:actions], ())
-            if hasmethod(length, typeof((actions,))) && length(actions) < Inf
-                kwd[:actionindex] = Dict(s=>i for (i,s) in enumerate(actions))
+            ka = kwd[:actions]
+
+            # check if only a state-dependent function (e.g. s->(1,2)) is provided
+            dynamic_actions_only = (ka isa Function && !hasmethod(ka, Tuple{})) || ka isa Dict
+
+            if !dynamic_actions_only
+                actions = _call(Val(:actions), ka, ())
+                if hasmethod(length, typeof((actions,))) && length(actions) < Inf
+                    kwd[:actionindex] = Dict(s=>i for (i,s) in enumerate(actions))
+                end
             end
         end
     end
@@ -149,7 +156,14 @@ function infer_actiontype(kwd)
     if haskey(kwd, :actiontype)
         at = _call(Val(:actiontype), kwd[:actiontype], (), NamedTuple())
     elseif haskey(kwd, :actions)
-        at = eltype(_call(Val(:actions), kwd[:actions], (), NamedTuple()))
+        kwa = kwd[:actions]
+        if kwa isa Function && !hasmethod(kwd[:actions], Tuple{})
+            at = Any
+        elseif kwa isa Dict
+            at = valtype(kwa)
+        else
+            at = eltype(_call(Val(:actions), kwd[:actions], (), NamedTuple()))
+        end
     else
         at = Any
     end
