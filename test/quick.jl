@@ -145,3 +145,12 @@ end
 @testset "#23" begin
     @test_throws ArgumentError QuickPOMDP(initialstate=:test)
 end
+
+@testset "action function" begin
+    m = QuickMDP(actions=s->(1,2,3))
+    @test actions(m, 1) == (1,2,3)
+    @test_throws MissingQuickArgument actionindex(m, 1)
+    m = QuickMDP(actions=Dict(1=>(1,2,3)))
+    @test actions(m, 1) == (1,2,3)
+    @test_throws MissingQuickArgument actionindex(m, 1)
+end
