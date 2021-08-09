@@ -20,7 +20,7 @@ The Quick Interface exposes nearly all of the features of POMDPs.jl as construct
 
 ```julia
 mountaincar = QuickMDP(
-    function (s, a, rng)        
+    gen = function (s, a, rng)        
         x, v = s
         vp = clamp(v + a*0.001 + cos(3*x)*-0.0025, -0.07, 0.07)
         xp = x + vp
@@ -40,7 +40,7 @@ mountaincar = QuickMDP(
 
 ## Discrete Explicit Interface
 
-The Discrete Explicit Interface is suitable for problems with small discrete state, action, and observation spaces. This interface is pedagogically useful because each element of the (S, A, O, R, T, Z, γ) tuple for a POMDP and (S, A, R, T, γ) tuple for an MDP is defined explicitly in a straightforward manner. [Documentation](https://juliapomdp.github.io/QuickPOMDPs.jl/stable/discrete_explicit/), Tiger POMDP Example:
+The Discrete Explicit Interface is an older, less powerful interface suitable for problems with small discrete state, action, and observation spaces. Though it is less powerful, the interface may be pedagogically useful because each element of the (S, A, O, R, T, Z, γ) tuple for a POMDP and (S, A, R, T, γ) tuple for an MDP is defined explicitly in a straightforward manner. [Documentation](https://juliapomdp.github.io/QuickPOMDPs.jl/stable/discrete_explicit/), Tiger POMDP Example:
 
 ```julia
 S = [:left, :right]
