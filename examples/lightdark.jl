@@ -26,7 +26,7 @@ simple_lightdark = QuickPOMDP(
 
     observation = (s, a, sp) -> Normal(sp, abs(sp - light_loc) + 0.0001),
 
-    reward = function (s, a, sp, o)
+    reward = function (s, a)
         if a == 0
             return s == 0 ? 100 : -100
         else
