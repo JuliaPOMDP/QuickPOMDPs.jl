@@ -38,6 +38,48 @@ mountaincar = QuickMDP(
 )
 ```
 
+Tiger POMDP Example:
+
+```julia
+tiger = QuickPOMDP(
+    states = ["left", "right"],
+    actions = ["left", "right", "listen"],
+    observations = ["left", "right"],
+    initialstate = Uniform(["left", "right"]),
+    discount = 0.95,
+
+    transition = function (s, a)
+        if a == "listen"
+            return Deterministic(s) # tiger stays behind the same door
+        else # a door is opened
+            return Uniform(["left", "right"]) # reset
+        end
+    end,
+
+    observation = function (s, a, sp)
+        if a == "listen"
+            if sp == "left"
+                return SparseCat(["left", "right"], [0.85, 0.15]) # sparse categorical distribution
+            else
+                return SparseCat(["right", "left"], [0.85, 0.15])
+            end
+        else
+            return Uniform(["left", "right"])
+        end
+    end,
+
+    reward = function (s, a)
+        if a == "listen"
+            return -1.0
+        elseif s == a # the tiger was found
+            return -100.0
+        else # the tiger was escaped
+            return 10.0
+        end
+    end
+)
+```
+
 ## Discrete Explicit Interface
 
 The Discrete Explicit Interface is an older, less powerful interface suitable for problems with small discrete state, action, and observation spaces. Though it is less powerful, the interface may be pedagogically useful because each element of the (S, A, O, R, T, Z, γ) tuple for a POMDP and (S, A, R, T, γ) tuple for an MDP is defined explicitly in a straightforward manner. [Documentation](https://juliapomdp.github.io/QuickPOMDPs.jl/stable/discrete_explicit/), Tiger POMDP Example:
