@@ -107,10 +107,13 @@ end
 struct A end
 @testset "preprocess" begin
     QuickPOMDPs.preprocess(::Type{A}) = Char 
-    qm = QuickMDP(statetype=A, actiontype=Int)
+    QuickPOMDPs.preprocess(::Val{:actiontype}, ::Type{A}) = Int 
+    qm = QuickMDP(statetype=A, actiontype=A)
     @test statetype(qm) == Char
-    qp = QuickPOMDP(statetype=A, actiontype=Int, obstype=Int)
+    @test actiontype(qm) == Int
+    qp = QuickPOMDP(statetype=A, actiontype=A, obstype=Int)
     @test statetype(qp) == Char
+    @test actiontype(qp) == Int
 end
 
 @testset "state action reward" begin

@@ -22,7 +22,7 @@ function QuickMDP(id=uuid4(); kwargs...)
     kwd = Dict{Symbol, Any}(kwargs)
 
     for (k, v) in pairs(kwd)
-        kwd[k] = preprocess(v)
+        kwd[k] = preprocess(Val(k), v)
     end
     quick_defaults!(kwd)
 
@@ -59,7 +59,7 @@ function QuickPOMDP(id=uuid4(); kwargs...)
     kwd = Dict{Symbol, Any}(kwargs)
 
     for (k, v) in pairs(kwd)
-        kwd[k] = preprocess(v)
+        kwd[k] = preprocess(Val(k), v)
     end
     quick_defaults!(kwd)
     quick_warnings(kwd)
@@ -78,6 +78,7 @@ const QuickModel = Union{QuickMDP, QuickPOMDP}
 
 "Function that is called on each keyword argument before anything else is done. This was designed as a hook to allow other packages to handle PyObjects."
 preprocess(x) = x
+preprocess(argval::Val, x) = preprocess(x)
 
 function quick_defaults!(kwd::Dict)
     kwd[:discount] = get(kwd, :discount, 1.0)
