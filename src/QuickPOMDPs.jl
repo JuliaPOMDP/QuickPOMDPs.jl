@@ -7,7 +7,6 @@ using POMDPTesting
 using UUIDs
 using NamedTupleTools
 using Random
-using Tricks: static_hasmethod
 
 export
     DiscreteExplicitPOMDP,
