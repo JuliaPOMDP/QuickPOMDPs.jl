@@ -1,7 +1,7 @@
 name = "QuickPOMDPs"
 uuid = "8af83fb2-a731-493c-9049-9e19dbce6165"
 authors = ["Zachary Sunberg <sunbergzach@gmail.com>"]
-version = "0.2.12"
+version = "0.2.13"
 
 [deps]
 BeliefUpdaters = "8bb6e9a1-7d73-552c-a44a-e5dc5634aac4"
@@ -19,7 +19,7 @@ NamedTupleTools = "0.11, 0.12, 0.13"
 POMDPModelTools = "0.3.1"
 POMDPTesting = "0.2.1"
 POMDPs = "0.9"
-Tricks = "0.1"
+Tricks = "0.1.6"
 julia = "1"
 
 [extras]
