@@ -9,6 +9,7 @@ The quick interface is perhaps best demonstrated by an example. The code below d
 
 ```jldoctest; output = false, filter = r".*"
 using QuickPOMDPs
+using POMDPModelTools: Deterministic
 
 mountaincar = QuickMDP(
     function (s, a, rng)        
@@ -23,7 +24,7 @@ mountaincar = QuickMDP(
         return (sp=(xp, vp), r=r)
     end,
     actions = [-1., 0., 1.],
-    initialstate = (-0.5, 0.0),
+    initialstate = Deterministic((-0.5, 0.0)),
     discount = 0.95,
     isterminal = s -> s[1] > 0.5
 )
