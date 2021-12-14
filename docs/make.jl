@@ -6,8 +6,8 @@ makedocs(
     format = Documenter.HTML(),
     modules = [QuickPOMDPs],
     pages = ["index.md",
+             "quick.md",
              "discrete_explicit.md",
-             "quick.md"
             ]
 )
 
