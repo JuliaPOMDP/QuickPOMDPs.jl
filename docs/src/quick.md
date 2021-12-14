@@ -73,7 +73,7 @@ render (from POMDPModelTools)
 
 Most keyword arguments may be either functions or static objects. For instance, in the above example, the action space is specified by a static list provided as the `actions` keyword argument. In other problems, the action space might be state-dependent and hence specified as a function of the state, for instance if the mountain car only had a braking action, the following code might be used:
 ```julia
-actions = function (s)
+actions = function (s) 
     v = s[2]
     if v >= 0.0
         return [0., -1.]
@@ -84,6 +84,17 @@ end
 ```
 
 When the keyword argument is a function, it should take all of the arguments that the corresponding POMDPs.jl function takes, but *without the model argument*. For instance, the signature for `POMDPs.isterminal` is `isterminal(m::Union{POMDP, MDP}, s)`, so the `isterminal` keyword argument takes a function of only `s` (the `m` model argument is omitted) as shown in the example above.
+
+!!! note
+    For the `actions` case above, you may want to also provide the full action space, that is, you may want to allow someone to call `actions(m)`, but the method above only provides `actions(m, s)` to the solver or simulator. This can be remedied by adding a default for the `s` argument
+    ```julia
+    actions = function (s=nothing)
+        if isnothing(s)
+            return [-1., 0., 1.]
+        end
+        # handle cases where s is supplied as above.
+    end
+    ```
 
 !!! note
 
