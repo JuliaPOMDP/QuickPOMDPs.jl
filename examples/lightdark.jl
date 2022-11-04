@@ -18,7 +18,7 @@ simple_lightdark = QuickPOMDP(
 
     transition = function (s, a)
         if a == 0
-            return Deterministic(r+1)
+            return Deterministic(r+1) # transition to terminal state
         else
             return Deterministic(clamp(s+a, -r, r))
         end
