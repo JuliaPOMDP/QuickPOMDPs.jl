@@ -37,7 +37,7 @@ POMDPs.actionindex(m::DE, a) = m.amap[a]
 
 POMDPs.observations(m::DEP) = m.o
 POMDPs.obsindex(m::DEP, o) = m.omap[o]
-POMDPModelTools.obs_weight(m::DEP, a, sp, o) = m.ofun(a, sp, o)
+POMDPTools.obs_weight(m::DEP, a, sp, o) = m.ofun(a, sp, o)
 
 POMDPs.transition(m::DE, s, a) = m.tds[s,a]
 POMDPs.observation(m::DEP, a, sp) = m.ods[a,sp]
@@ -47,9 +47,9 @@ POMDPs.initialstate(m::DE) = m.initial
 
 POMDPs.isterminal(m::DE,s) = s in m.terminals
 
-POMDPModelTools.ordered_states(m::DE) = m.s
-POMDPModelTools.ordered_actions(m::DE) = m.a
-POMDPModelTools.ordered_observations(m::DEP) = m.o
+POMDPTools.ordered_states(m::DE) = m.s
+POMDPTools.ordered_actions(m::DE) = m.a
+POMDPTools.ordered_observations(m::DEP) = m.o
 
 
 """

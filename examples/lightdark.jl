@@ -1,5 +1,5 @@
 using QuickPOMDPs
-using POMDPModelTools
+using POMDPTools
 using Distributions
 
 #=
@@ -34,5 +34,5 @@ simple_lightdark = QuickPOMDP(
         end
     end,
 
-    initialstate = POMDPModelTools.Uniform(div(-r,2):div(r,2))
+    initialstate = POMDPTools.Uniform(div(-r,2):div(r,2))
 )
