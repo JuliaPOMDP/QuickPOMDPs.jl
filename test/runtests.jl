@@ -2,10 +2,7 @@ using QuickPOMDPs
 using Test
 
 using POMDPs
-using POMDPPolicies
-using POMDPSimulators
-using BeliefUpdaters
-using POMDPModelTools
+using POMDPTools
 using Random
 using Compose
 

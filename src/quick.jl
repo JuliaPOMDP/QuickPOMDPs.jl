@@ -83,7 +83,7 @@ preprocess(argval::Val, x) = preprocess(x)
 function quick_defaults!(kwd::Dict)
     kwd[:discount] = get(kwd, :discount, 1.0)
     kwd[:isterminal] = get(kwd, :isterminal, false)
-    
+
     if !haskey(kwd, :stateindex)
         if haskey(kwd, :states)
             states = _call(Val(:states), kwd[:states], ())
@@ -279,7 +279,7 @@ end
 @forward_to_data POMDPs.isterminal
 
 
-function POMDPModelTools.obs_weight(m::QuickPOMDP, args...)
+function POMDPTools.obs_weight(m::QuickPOMDP, args...)
     if haskey(m.data, :obs_weight)
         return _call(Val(:obs_weight), m, args)
     elseif haskey(m.data, :observation)
@@ -288,9 +288,9 @@ function POMDPModelTools.obs_weight(m::QuickPOMDP, args...)
         throw(MissingQuickArgument(m, :obs_weight, types=[Function], also=[:observation]))
     end
 end
-@forward_to_data POMDPModelTools.render
+@forward_to_data POMDPTools.render
 
-function POMDPModelTools.StateActionReward(m::Union{QuickPOMDP,QuickMDP})
+function POMDPTools.StateActionReward(m::Union{QuickPOMDP,QuickMDP})
     if hasmethod(m.data[:reward], Tuple{statetype(m), actiontype(m)})
         return FunctionSAR(m)
     else
