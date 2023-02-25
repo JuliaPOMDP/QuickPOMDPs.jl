@@ -12,7 +12,7 @@ Tricks = "410a4b4d-49e4-4fbc-ab6d-cb71b17b3775"
 UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 
 [compat]
-NamedTupleTools = "0.11, 0.12, 0.13"
+NamedTupleTools = "0.11, 0.12, 0.13, 0.14"
 POMDPTools = "0.1"
 POMDPs = "0.9"
 Tricks = "0.1.6"
