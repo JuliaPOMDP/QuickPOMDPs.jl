@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/JuliaPOMDP/QuickPOMDPs.jl.svg?branch=master)](https://travis-ci.org/JuliaPOMDP/QuickPOMDPs.jl)
 [![Docs - Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaPOMDP.github.io/QuickPOMDPs.jl/stable)
 [![Docs - Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaPOMDP.github.io/QuickPOMDPs.jl/dev)
-[![codecov.io](http://codecov.io/github/JuliaPOMDP/QuickPOMDPs.jl/coverage.svg?branch=master)](http://codecov.io/github/JuliaPOMDP/QuickPOMDPs.jl?branch=master)
+[![codecov](https://codecov.io/gh/JuliaPOMDP/QuickPOMDPs.jl/branch/master/graph/badge.svg?token=bknBwoIcIm)](https://codecov.io/gh/JuliaPOMDP/QuickPOMDPs.jl)
 
 Simplified interfaces for specifying [POMDPs.jl](https://github.com/JuliaPOMDP/POMDPs.jl) models.
 
