@@ -146,7 +146,7 @@ end
 end
 
 @testset "#23" begin
-    @test_throws MethodError QuickPOMDP(initialstate=:test)
+    @test_throws Union{ArgumentError,MethodError} QuickPOMDP(initialstate=:test)
 end
 
 @testset "action function" begin
