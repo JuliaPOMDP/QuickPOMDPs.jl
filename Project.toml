@@ -1,7 +1,7 @@
 name = "QuickPOMDPs"
 uuid = "8af83fb2-a731-493c-9049-9e19dbce6165"
 authors = ["Zachary Sunberg <sunbergzach@gmail.com>"]
-version = "0.2.14"
+version = "0.2.15"
 
 [deps]
 NamedTupleTools = "d9ec5142-1e00-5aa0-9d6a-321866360f50"
@@ -13,8 +13,8 @@ UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 
 [compat]
 NamedTupleTools = "0.11, 0.12, 0.13, 0.14"
-POMDPTools = "0.1"
-POMDPs = "0.9"
+POMDPTools = "0.1, 1"
+POMDPs = "0.9, 1"
 Tricks = "0.1.6"
 julia = "1"
 
