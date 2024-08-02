@@ -9,7 +9,7 @@ The quick interface is perhaps best demonstrated by an example. The code below d
 
 ```jldoctest; output = false, filter = r".*"
 using QuickPOMDPs
-using POMDPModelTools: Deterministic
+using POMDPTools: Deterministic
 
 mountaincar = QuickMDP(
     function (s, a, rng)        
