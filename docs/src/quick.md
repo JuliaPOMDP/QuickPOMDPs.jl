@@ -12,7 +12,7 @@ using QuickPOMDPs
 using POMDPTools: Deterministic
 
 mountaincar = QuickMDP(
-    function (s, a, rng)        
+    gen = function (s, a, rng)        
         x, v = s
         vp = clamp(v + a*0.001 + cos(3*x)*-0.0025, -0.07, 0.07)
         xp = x + vp
